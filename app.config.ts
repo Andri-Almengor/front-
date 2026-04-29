@@ -60,7 +60,7 @@ export default (): ExpoConfig => ({
     API_BASE_URL: normalizeBaseUrl(
       process.env.EXPO_PUBLIC_API_BASE_URL ??
         process.env.API_BASE_URL ??
-        "http://192.168.68.115:4000"
+        "https://app-kosher-costa-rica.onrender.com"
     ),
     eas: {
       projectId: "121697d8-e2d1-4739-a9f9-c33b2cc4a534",
