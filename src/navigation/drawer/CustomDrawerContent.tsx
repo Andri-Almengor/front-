@@ -143,7 +143,7 @@ export default function CustomDrawerContent(props: DrawerProps) {
   const openDrawerContactActions = useCallback(() => {
     const phoneRaw = "2520-1013";
     const phoneDisplay = `${phoneRaw} ext. 117`;
-    const email = "certificacioneskosher@centroisraelita.com";
+    const email = "certificacioneskosher@gmail.com";
 
     Alert.alert(
       t("drawerContactQuickActionsTitle"),
