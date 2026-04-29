@@ -8,7 +8,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "http://192.168.68.115:4000"
+        "EXPO_PUBLIC_API_BASE_URL": "https://app-kosher-costa-rica.onrender.com"
       }
     },
     "previewLocal": {
@@ -17,7 +17,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "http://192.168.68.115:4000"
+        "EXPO_PUBLIC_API_BASE_URL": "https://app-kosher-costa-rica.onrender.com"
       }
     },
     "previewRemote": {
@@ -26,7 +26,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://kccr-backend.onrender.com"
+        "EXPO_PUBLIC_API_BASE_URL": "https://app-kosher-costa-rica.onrender.com"
       }
     },
     "production": {
@@ -35,7 +35,7 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://kccr-backend.onrender.com"
+        "EXPO_PUBLIC_API_BASE_URL": "https://app-kosher-costa-rica.onrender.com"
       }
     }
   }
