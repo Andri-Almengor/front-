@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageBackground, Pressable, StyleSheet, Text, View } from "react-native";
+import { ImageBackground, Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { useCachedUri } from "@/hooks/useCachedUri";
 import { useTheme } from "@/theme/ThemeProvider";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -42,6 +42,8 @@ type Props =
 export const HomeCard = React.memo(function HomeCard(props: Props) {
   const { palette: c } = useTheme();
   const { t } = useI18n();
+  const { width } = useWindowDimensions();
+  const isWebWide = width >= 768;
 
   const cachedUri = useCachedUri(typeof props.image === "string" ? props.image : null);
   const source = typeof props.image === "string" ? (cachedUri ? { uri: cachedUri } : undefined) : props.image;
@@ -64,11 +66,11 @@ export const HomeCard = React.memo(function HomeCard(props: Props) {
 
   return (
     <Pressable onPress={props.onPress} style={({ pressed }) => [{ opacity: pressed ? 0.96 : 1 }]}> 
-      <ImageBackground source={source} style={styles.bg} imageStyle={styles.bgImg}>
+      <ImageBackground source={source} style={[styles.bg, isWebWide ? styles.bgWeb : null]} imageStyle={styles.bgImg}>
         <View style={styles.overlay} />
-        <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        <View style={[styles.content, isWebWide ? styles.contentWeb : null]}>
+        <Text style={[styles.title, isWebWide ? styles.titleWeb : null]}>{title}</Text>
+        <Text style={[styles.subtitle, isWebWide ? styles.subtitleWeb : null]}>{subtitle}</Text>
 
         {!props.hideButton ? (
           <View style={styles.buttonsRow}>
@@ -103,11 +105,15 @@ export const HomeCard = React.memo(function HomeCard(props: Props) {
 
 const styles = StyleSheet.create({
   bg: { height: 158, borderRadius: 18, overflow: "hidden", marginBottom: 14, justifyContent: "flex-end" },
+  bgWeb: { height: 220, borderRadius: 24 },
   bgImg: { borderRadius: 18 },
   overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.30)" },
   content: { padding: 14 },
+  contentWeb: { padding: 22, maxWidth: 720 },
   title: { fontSize: 24, fontFamily: AppFonts.poppinsSemiBold, color: "#fff", fontWeight: "800", letterSpacing: 0.2 },
+  titleWeb: { fontSize: 30, lineHeight: 36 },
   subtitle: { marginTop: 6, fontSize: 14, fontFamily: AppFonts.poppinsRegular, color: "rgba(255,255,255,0.85)" },
+  subtitleWeb: { fontSize: 16, lineHeight: 22, maxWidth: 620 },
   buttonsRow: { flexDirection: "row", alignItems: "center", gap: 10, marginTop: 12, flexWrap: "wrap" },
   btn: { alignSelf: "flex-start", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 999 },
   secondaryBtn: { borderWidth: 1 },

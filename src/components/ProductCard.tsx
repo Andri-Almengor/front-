@@ -50,6 +50,7 @@ export const ProductCard = memo(function ProductCard({ item, onPress }: Props) {
   const { t, lang } = useI18n();
   const { width } = useWindowDimensions();
   const compact = width < 380;
+  const webWide = width >= 768;
 
   const localized = useMemo(() => {
     if ((item as any)?.__localizedLang === lang) return item as any;
@@ -77,6 +78,7 @@ export const ProductCard = memo(function ProductCard({ item, onPress }: Props) {
       onPress={onPress}
       style={({ pressed }) => [
         styles.card,
+        webWide ? styles.cardWeb : null,
         {
           backgroundColor: colors.card,
           borderColor: colors.border,
@@ -99,11 +101,11 @@ export const ProductCard = memo(function ProductCard({ item, onPress }: Props) {
       </View>
 
       <View style={styles.body}>
-        <Text numberOfLines={1} style={[styles.name, { color: colors.text }]}>
+        <Text numberOfLines={1} style={[styles.name, webWide ? styles.nameWeb : null, { color: colors.text }]}>
           {localized.nombre}
         </Text>
 
-        <Text numberOfLines={1} style={[styles.sub, { color: colors.text, opacity: 0.65 }]}>
+        <Text numberOfLines={1} style={[styles.sub, webWide ? styles.subWeb : null, { color: colors.text, opacity: 0.65 }]}>
           {subtitle || t("na")}
         </Text>
 
@@ -122,7 +124,7 @@ export const ProductCard = memo(function ProductCard({ item, onPress }: Props) {
 
           <View style={[styles.rightColumn, compact && styles.rightColumnCompact]}>
             {!!chips[0] && (
-              <View style={[styles.attributePill, { backgroundColor: atributo1Color }]}> 
+              <View style={[styles.attributePill, webWide ? styles.attributePillWeb : null, { backgroundColor: atributo1Color }]}> 
                 <Text style={styles.attributeText}>{String(chips[0]).toUpperCase()}</Text>
               </View>
             )}
@@ -130,6 +132,7 @@ export const ProductCard = memo(function ProductCard({ item, onPress }: Props) {
             <View
               style={[
                 styles.storePillSmall,
+                webWide ? styles.storePillWeb : null,
                 { backgroundColor: colors.muted, borderColor: colors.border },
                 compact && styles.storePillCompact,
               ]}
@@ -155,6 +158,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     flex: 1,
     marginBottom: 12,
+  },
+  cardWeb: {
+    borderRadius: 18,
+    minHeight: 330,
   },
   imageWrap: {
     width: "100%",
@@ -189,9 +196,17 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     letterSpacing: 0.2,
   },
+  nameWeb: {
+    fontSize: 18,
+    lineHeight: 23,
+  },
   sub: {
     fontSize: 13,
     fontFamily: AppFonts.poppinsRegular,
+  },
+  subWeb: {
+    fontSize: 14,
+    lineHeight: 19,
   },
   bottomRow: {
     flexDirection: "row",
@@ -226,6 +241,11 @@ const styles = StyleSheet.create({
     minHeight: 74,
     justifyContent: "center",
   },
+  storePillWeb: {
+    width: "100%",
+    left: 0,
+    minHeight: 66,
+  },
   storePillCompact: {
     minHeight: 6,
     paddingHorizontal: 4,
@@ -250,6 +270,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "flex-start",
     maxWidth: "100%",
+  },
+  attributePillWeb: {
+    left: 0,
+    alignSelf: "stretch",
   },
   attributeText: {
     color: "#fff",

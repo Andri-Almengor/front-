@@ -33,7 +33,7 @@ export const AppHeader = React.memo(function AppHeader({ title }: Props) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: c.card, borderBottomColor: c.border, paddingTop: insets.top + 2 }]}>
+    <View style={[styles.container, width >= 768 ? styles.containerWeb : null, { backgroundColor: c.card, borderBottomColor: c.border, paddingTop: insets.top + 2 }]}>
       <Pressable
         onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
         style={styles.iconBtn}
@@ -46,9 +46,9 @@ export const AppHeader = React.memo(function AppHeader({ title }: Props) {
         <Pressable
           onPressIn={startSecretLogin}
           onPressOut={cancelSecretLogin}
-          style={styles.logoWrap}
+          style={[styles.logoWrap, width >= 768 ? styles.logoWrapWeb : null]}
         >
-          <Image source={require("../../assets/icon.png")} style={[styles.logo, width < 360 ? styles.logoSmall : null]} />
+          <Image source={require("../../assets/icon.png")} style={[styles.logo, width < 360 ? styles.logoSmall : null, width >= 768 ? styles.logoWeb : null]} />
         </Pressable>
       </View>
 
@@ -66,6 +66,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     minHeight: 50,
   },
+  containerWeb: {
+    minHeight: 68,
+    paddingHorizontal: 26,
+  },
   iconBtn: {
     width: 38,
     height: 38,
@@ -74,6 +78,8 @@ const styles = StyleSheet.create({
   },
   centerWrap: { flex: 1, alignItems: "center", justifyContent: "center" },
   logoWrap: { minWidth: 44, height: 20, justifyContent: "center", alignItems: "center" },
+  logoWrapWeb: { height: 44 },
   logo: { width: 196, height: 92, borderRadius: 10, resizeMode: "contain" },
+  logoWeb: { width: 240, height: 110 },
   logoSmall: { width: 136, height: 54 },
 });
