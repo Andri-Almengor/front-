@@ -40,6 +40,7 @@ export default function ImagePickerUpload({
   const [queued, setQueued] = useState(0);
   const [dragging, setDragging] = useState(false);
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
+  const hiddenCameraInputRef = useRef<HTMLInputElement | null>(null);
 
   const refreshQueue = async () => setQueued(await getCloudinaryUploadQueueCount());
 
@@ -90,6 +91,14 @@ export default function ImagePickerUpload({
     hiddenInputRef.current?.click();
   };
 
+  const selectFromCamera = () => {
+    if (Platform.OS !== "web") {
+      Alert.alert("Disponible en web", "Este módulo web permite cargar imágenes desde el navegador del teléfono o computadora.");
+      return;
+    }
+    hiddenCameraInputRef.current?.click();
+  };
+
   const webDropProps = Platform.OS === "web" ? {
     onDragEnter: (event: any) => {
       event.preventDefault();
@@ -124,25 +133,46 @@ export default function ImagePickerUpload({
       />
 
       {Platform.OS === "web" ? (
-        <input
-          ref={hiddenInputRef}
-          type="file"
-          accept="image/*"
-          style={{ display: "none" }}
-          onChange={(event) => {
-            const file = event.currentTarget.files?.[0];
-            event.currentTarget.value = "";
-            if (file) void uploadFileNowOrQueue(file);
-          }}
-        />
+        <>
+          <input
+            ref={hiddenInputRef}
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={(event) => {
+              const file = event.currentTarget.files?.[0];
+              event.currentTarget.value = "";
+              if (file) void uploadFileNowOrQueue(file);
+            }}
+          />
+          <input
+            ref={hiddenCameraInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            style={{ display: "none" }}
+            onChange={(event) => {
+              const file = event.currentTarget.files?.[0];
+              event.currentTarget.value = "";
+              if (file) void uploadFileNowOrQueue(file);
+            }}
+          />
+        </>
       ) : null}
 
-      <Pressable disabled={uploading} onPress={selectFile} style={[styles.uploadBtn, { borderColor: dragging ? textColor : borderColor, backgroundColor }]}> 
-        {uploading ? <ActivityIndicator size="small" color={textColor} /> : <Ionicons name="cloud-upload-outline" size={18} color={textColor} />}
-        <Text style={[styles.uploadText, { color: textColor }]}>{uploading ? `Subiendo... ${progress}%` : "Subir imagen"}</Text>
-      </Pressable>
+      <View style={styles.actionsRow}>
+        <Pressable disabled={uploading} onPress={selectFile} style={[styles.uploadBtn, styles.actionBtn, { borderColor: dragging ? textColor : borderColor, backgroundColor }]}> 
+          {uploading ? <ActivityIndicator size="small" color={textColor} /> : <Ionicons name="folder-open-outline" size={18} color={textColor} />}
+          <Text style={[styles.uploadText, { color: textColor }]}>{uploading ? `Subiendo... ${progress}%` : "Subir desde computador"}</Text>
+        </Pressable>
 
-      <Text style={[styles.helper, { color: mutedColor }]}>Puedes pegar la URL manualmente, seleccionar una imagen o arrastrarla aquí.</Text>
+        <Pressable disabled={uploading} onPress={selectFromCamera} style={[styles.uploadBtn, styles.actionBtn, { borderColor, backgroundColor }]}> 
+          <Ionicons name="camera-outline" size={18} color={textColor} />
+          <Text style={[styles.uploadText, { color: textColor }]}>Tomar foto / galería</Text>
+        </Pressable>
+      </View>
+
+      <Text style={[styles.helper, { color: mutedColor }]}>Puedes pegar la URL manualmente, seleccionar una imagen desde tu computador, tomar foto desde el teléfono o arrastrarla aquí.</Text>
       {queued > 0 ? <Text style={[styles.helper, { color: mutedColor }]}>Pendientes por subir cuando vuelva internet: {queued}</Text> : null}
 
       {progress > 0 ? (
@@ -160,7 +190,9 @@ const styles = StyleSheet.create({
   wrap: { marginTop: 10, marginBottom: 6 },
   label: { marginBottom: 8, fontSize: 12, fontWeight: "800", textTransform: "uppercase", letterSpacing: 0.4 },
   input: { borderWidth: 1, borderRadius: 16, paddingHorizontal: 14, height: 50, fontWeight: "700" },
-  uploadBtn: { marginTop: 10, minHeight: 48, borderWidth: 1, borderRadius: 16, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 8, paddingHorizontal: 12 },
+  actionsRow: { marginTop: 10, flexDirection: "row", gap: 10, flexWrap: "wrap" },
+  uploadBtn: { minHeight: 48, borderWidth: 1, borderRadius: 16, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 8, paddingHorizontal: 12 },
+  actionBtn: { flexGrow: 1 },
   uploadText: { fontSize: 13, fontWeight: "900" },
   helper: { marginTop: 8, fontSize: 12, fontWeight: "700", lineHeight: 17 },
   progressTrack: { marginTop: 10, height: 8, borderRadius: 999, overflow: "hidden" },
