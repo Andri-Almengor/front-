@@ -11,6 +11,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { localizeProduct } from "@/features/products/utils/localizeProduct";
 import { listAdminProducts, createAdminProduct, updateAdminProduct, deleteAdminProduct, importProductsExcel, type AdminProduct } from "@/features/admin/api/adminProductsApi";
 import { CreatableSelect } from "@/components/CreatableSelect";
+import ImagePickerUpload from "@/components/ImagePickerUpload";
 import { exportRowsToExcel, pickExcelDocument } from "@/features/admin/utils/excelIO";
 import { resolveOptionTranslation, translateField } from "@/features/admin/utils/bilingualAutofill";
 import { getAdminProductsHomeCardConfig, updateAdminProductsHomeCardConfig, type ProductsHomeCardConfig } from "@/features/admin/api/adminUiSettingsApi";
@@ -394,7 +395,18 @@ export default function AdminProductsScreen() {
                 <CreatableSelect label={`${t("atributo2")} (EN)`} value={form.atributo2En ?? ""} options={opts.atributo2.en} allowEmpty onChange={(v: string) => setForm((s) => ({ ...s, atributo2En: v }))} />
                 <CreatableSelect label={`${t("atributo3")} (ES)`} value={form.atributo3 ?? ""} options={opts.atributo3.es} allowEmpty onChange={(v: string) => setForm((s) => ({ ...s, atributo3: v }))} />
                 <CreatableSelect label={`${t("atributo3")} (EN)`} value={form.atributo3En ?? ""} options={opts.atributo3.en} allowEmpty onChange={(v: string) => setForm((s) => ({ ...s, atributo3En: v }))} />
-                <Field label="Foto producto" value={form.fotoProducto ?? ""} onChange={(v) => setForm((s) => ({ ...s, fotoProducto: v }))} />
+                <ImagePickerUpload
+                  label="Foto producto"
+                  value={form.fotoProducto ?? ""}
+                  onChange={(v) => setForm((s) => ({ ...s, fotoProducto: v }))}
+                  folder="kosher-costa-rica/productos"
+                  textColor={c.text}
+                  mutedColor={c.muted}
+                  borderColor={c.border}
+                  backgroundColor={c.bg}
+                  inputStyle={styles.input}
+                  labelStyle={styles.fieldLabel}
+                />
                 <Pressable style={[styles.saveBtn, { backgroundColor: c.primary }]} onPress={onSave}><Text style={{ color: c.primaryText, fontWeight: "900" }}>{t("save")}</Text></Pressable>
               </View>
             </ScrollView>

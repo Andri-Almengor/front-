@@ -10,6 +10,7 @@ import { useAuth } from "@/app/auth/authStore";
 import { useTheme } from "@/theme/ThemeProvider";
 import { useI18n } from "@/i18n/I18nProvider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ImagePickerUpload from "@/components/ImagePickerUpload";
 import { translateField } from "@/features/admin/utils/bilingualAutofill";
 import { listRestaurants, type AdminRestaurant } from "@/features/admin/api/adminRestaurantsApi";
 import { listNews, createNews, updateNews, deleteNews, type AdminNews } from "@/features/admin/api/adminNewsApi";
@@ -224,8 +225,18 @@ export default function AdminNewsScreen() {
                 <Text style={[styles.label, { color: c.muted }]}>Contenido</Text>
                 <TextInput value={contenido} onChangeText={setContenido} multiline style={[styles.field, styles.area, { backgroundColor: c.bg, borderColor: c.border, color: c.text }]} placeholderTextColor={c.muted} placeholder="Texto principal" />
 
-                <Text style={[styles.label, { color: c.muted }]}>URL imagen</Text>
-                <TextInput value={imageUrl} onChangeText={setImageUrl} style={[styles.field, { backgroundColor: c.bg, borderColor: c.border, color: c.text }]} placeholderTextColor={c.muted} placeholder="https://..." />
+                <ImagePickerUpload
+                  label="URL imagen"
+                  value={imageUrl}
+                  onChange={setImageUrl}
+                  folder="kosher-costa-rica/novedades"
+                  textColor={c.text}
+                  mutedColor={c.muted}
+                  borderColor={c.border}
+                  backgroundColor={c.bg}
+                  inputStyle={styles.field}
+                  labelStyle={styles.label}
+                />
 
                 <Text style={[styles.label, { color: c.muted }]}>URL adjunto</Text>
                 <TextInput value={fileUrl} onChangeText={setFileUrl} style={[styles.field, { backgroundColor: c.bg, borderColor: c.border, color: c.text }]} placeholderTextColor={c.muted} placeholder="https://..." />

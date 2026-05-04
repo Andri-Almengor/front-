@@ -8,6 +8,7 @@ import { useTheme } from "@/theme/ThemeProvider";
 import { useI18n } from "@/i18n/I18nProvider";
 import { AppFonts } from "@/theme/fonts";
 import { CreatableSelect } from "@/components/CreatableSelect";
+import ImagePickerUpload from "@/components/ImagePickerUpload";
 import { resolveOptionTranslation, translateField } from "@/features/admin/utils/bilingualAutofill";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { listNews, updateNews } from "@/features/admin/api/adminNewsApi";
@@ -303,7 +304,16 @@ ${t("relatedNewsShown").replace("{{count}}", String(data.shownNewsCount))}` : t(
             <CreatableSelect label={t("restaurantNameEn")} value={form.nombreEn} options={namesEn} onChange={(v) => setForm((s) => ({ ...s, nombreEn: String(v ?? "") }))} />
             <CreatableSelect label={t("businessTypeEs")} value={form.tipoEs} options={typesEs} onChange={(v) => setForm((s) => ({ ...s, tipoEs: String(v ?? "") }))} />
             <CreatableSelect label={t("businessTypeEn")} value={form.tipoEn} options={typesEn} onChange={(v) => setForm((s) => ({ ...s, tipoEn: String(v ?? "") }))} />
-            <Input label={t("restaurantImage")} value={form.imageUrl} onChangeText={(v) => setForm((s) => ({ ...s, imageUrl: v }))} />
+            <ImagePickerUpload
+              label={t("restaurantImage")}
+              value={form.imageUrl}
+              onChange={(v) => setForm((s) => ({ ...s, imageUrl: v }))}
+              folder="kosher-costa-rica/restaurantes"
+              textColor={c.text}
+              mutedColor={c.muted}
+              borderColor={c.border}
+              backgroundColor={c.card}
+            />
             <Input label={t("locationEs")} value={form.ubicacionEs} onChangeText={(v) => setForm((s) => ({ ...s, ubicacionEs: v }))} />
             <Input label={t("locationEn")} value={form.ubicacionEn} onChangeText={(v) => setForm((s) => ({ ...s, ubicacionEn: v }))} />
             <Input label={t("aboutEs")} value={form.acercaDeEs} onChangeText={(v) => setForm((s) => ({ ...s, acercaDeEs: v }))} multiline />
