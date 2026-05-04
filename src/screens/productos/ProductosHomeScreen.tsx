@@ -78,8 +78,9 @@ export function ProductosHomeScreen() {
   const { t, lang } = useI18n();
   const { palette: c } = useTheme();
   const { width } = useWindowDimensions();
-  const numColumns = width >= 1180 ? 4 : width >= 820 ? 3 : 2;
-  const isWide = numColumns > 2;
+  const numColumns = width >= 1440 ? 5 : width >= 1120 ? 4 : width >= 820 ? 3 : width >= 560 ? 2 : 1;
+  const webMaxWidth = width >= 1440 ? 1380 : width >= 1120 ? 1180 : width >= 820 ? 920 : width >= 560 ? 720 : undefined;
+  const listWidthStyle = webMaxWidth ? { maxWidth: webMaxWidth } : null;
 
   const { data: heroConfig, isLoading: heroConfigLoading, refetch: refetchHeroConfig } = useQuery({
     queryKey: ["products-home-card"],
@@ -470,7 +471,7 @@ export function ProductosHomeScreen() {
           data={productResults}
           keyExtractor={keyExtractor}
           numColumns={numColumns}
-          contentContainerStyle={styles.productsListContent}
+          contentContainerStyle={[styles.productsListContent, styles.webListContent, listWidthStyle]}
           columnWrapperStyle={numColumns > 1 ? styles.productsColumn : undefined}
           renderItem={renderProducto}
           initialNumToRender={10}
@@ -517,7 +518,7 @@ export function ProductosHomeScreen() {
           key="categories-list"
           data={filteredCategories}
           keyExtractor={(i) => i}
-          contentContainerStyle={styles.categoriesListContent}
+          contentContainerStyle={[styles.categoriesListContent, styles.webListContent, listWidthStyle]}
           keyboardShouldPersistTaps="handled"
           renderItem={({ item }) => (
             <Pressable
@@ -606,9 +607,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingBottom: 140,
   },
+  webListContent: {
+    width: "100%",
+    alignSelf: "center",
+  },
   productsColumn: {
-    gap: 12,
-    justifyContent: "space-between",
+    gap: 14,
+    justifyContent: "flex-start",
   },
   center: {
     flex: 1,

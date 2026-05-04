@@ -9,7 +9,12 @@ export function installResponsiveWebStyles() {
   style.textContent = `
     html, body, #root { width: 100%; min-height: 100%; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-    body { overflow-x: hidden; background: #ffffff; }
+    body { overflow-x: hidden; background: #f8fafc; }
+    body, button, input, textarea, select { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    a, button, [role='button'] { cursor: pointer; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.22); border-radius: 999px; }
+    ::-webkit-scrollbar-track { background: transparent; }
     #root { display: flex; flex-direction: column; }
     * { box-sizing: border-box; }
     img, video, canvas, svg { max-width: 100%; height: auto; }

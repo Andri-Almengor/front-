@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useRef, useEffect, useDeferredValue, useCallback } from "react";
 import { useNavigation, useRoute, useFocusEffect, useNavigationState } from "@react-navigation/native";
-import { View, Text, StyleSheet, FlatList, Pressable, ActivityIndicator, Platform, Alert } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable, ActivityIndicator, Platform, Alert, useWindowDimensions } from "react-native";
 import { AppHeader } from "@/components/AppHeader";
 import { useTheme } from "@/theme/ThemeProvider";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -37,6 +37,9 @@ export function NovedadesScreen() {
   const route = useRoute<any>();
   const navigation = useNavigation<any>();
   const currentRootTab = useNavigationState((state) => state?.routes?.[state.index ?? 0]?.name ?? null);
+  const { width } = useWindowDimensions();
+  const numColumns = width >= 1180 ? 2 : 1;
+  const webMaxWidth = width >= 1180 ? 1180 : width >= 768 ? 920 : undefined;
 
   const [restaurantFilter, setRestaurantFilter] = useState<number | null>(route.params?.restaurantId ?? null);
   const [q, setQ] = useState(String(route.params?.initialQuery || ""));
@@ -193,7 +196,10 @@ export function NovedadesScreen() {
           data={filtered}
           keyExtractor={keyExtractor}
           renderItem={renderNewsItem}
-          contentContainerStyle={{ padding: 14, paddingBottom: 140, flexGrow: filtered.length ? 0 : 1 }}
+          contentContainerStyle={[styles.listContent, webMaxWidth ? styles.webListContent : null, webMaxWidth ? { maxWidth: webMaxWidth } : null, { flexGrow: filtered.length ? 0 : 1 }]}
+          numColumns={numColumns}
+          key={`news-grid-${numColumns}`}
+          columnWrapperStyle={numColumns > 1 ? styles.newsColumn : undefined}
           ListEmptyComponent={<View style={styles.center}><Text style={{ color: c.muted, fontFamily: AppFonts.poppinsRegular, textAlign: "center" }}>{q ? t("noResults") : t("noNewsYet")}</Text></View>}
           refreshing={isFetching}
           onRefresh={() => refresh()}
@@ -210,7 +216,10 @@ export function NovedadesScreen() {
 
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 16 },
-  card: { borderWidth: 1, borderRadius: 22, marginBottom: 16, overflow: "hidden", padding: 1 },
+  listContent: { padding: 14, paddingBottom: 140 },
+  webListContent: { width: "100%", alignSelf: "center" },
+  newsColumn: { gap: 14, alignItems: "stretch" },
+  card: { borderWidth: 1, borderRadius: 22, marginBottom: 16, overflow: "hidden", padding: 1, flex: 1 },
   restaurantLink: { marginTop: 4, paddingHorizontal: 12, fontFamily: AppFonts.poppinsSemiBold, fontWeight: "800" },
   body: { marginTop: 8, paddingHorizontal: 12, fontSize: 13, fontFamily: AppFonts.poppinsRegular, lineHeight: 18 },
   actionsRow: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 12, marginBottom: 12, marginHorizontal: 12 },

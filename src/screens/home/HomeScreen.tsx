@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
+import { View, StyleSheet, ScrollView, RefreshControl, useWindowDimensions } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { AppHeader } from "@/components/AppHeader";
@@ -16,6 +16,8 @@ export function HomeScreen() {
   const { t } = useI18n();
   const [refreshing, setRefreshing] = React.useState(false);
   const [q, setQ] = React.useState("");
+  const { width } = useWindowDimensions();
+  const webMaxWidth = width >= 1180 ? 1180 : width >= 768 ? 920 : undefined;
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -54,7 +56,7 @@ export function HomeScreen() {
         <SearchBar value={q} onChangeText={setQ} placeholder={t("searchPlaceholder")} variant="onPrimary" onSubmitEditing={handleSubmitSearch} />
       </View>
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, webMaxWidth ? styles.webContent : null, webMaxWidth ? { maxWidth: webMaxWidth } : null]}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <HomeCard titleKey="home_products_title" subtitleKey="home_products_subtitle" buttonKey="home_products_button" image="https://res.cloudinary.com/dbp9mpyq0/image/upload/v1773436627/PRODUCTOS_KOSHER_3_twhy9y.jpg" onPress={() => nav.navigate("Productos")} />
@@ -68,6 +70,7 @@ export function HomeScreen() {
 
 const styles = StyleSheet.create({
   content: { paddingHorizontal: 14, paddingBottom: 140, paddingTop: 20 },
+  webContent: { width: "100%", alignSelf: "center" },
   searchWrap: { paddingHorizontal: 14, paddingTop: 10, paddingBottom: 12 },
 });
 

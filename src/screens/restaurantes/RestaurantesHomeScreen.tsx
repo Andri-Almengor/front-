@@ -1,5 +1,5 @@
 import React, { useDeferredValue, useEffect, useMemo, useRef, useState, useCallback } from "react";
-import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable, useWindowDimensions } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { AppHeader } from "@/components/AppHeader";
 import { SearchBar } from "@/components/SearchBar";
@@ -19,6 +19,9 @@ export function RestaurantesHomeScreen() {
   const route = useRoute<any>();
   const { t, lang } = useI18n();
   const { palette: c } = useTheme();
+  const { width } = useWindowDimensions();
+  const numColumns = width >= 1180 ? 3 : width >= 780 ? 2 : 1;
+  const webMaxWidth = width >= 1180 ? 1180 : width >= 780 ? 920 : undefined;
   const [q, setQ] = useState(String(route?.params?.initialQuery || ""));
   const deferredQuery = useDeferredValue(q);
   const [tipo, setTipo] = useState<string>("");
@@ -116,7 +119,10 @@ export function RestaurantesHomeScreen() {
       <FlatList
         data={filtered}
         keyExtractor={keyExtractor}
-        contentContainerStyle={{ padding: 14, paddingBottom: 140, gap: 14 }}
+        contentContainerStyle={[styles.listContent, webMaxWidth ? styles.webListContent : null, webMaxWidth ? { maxWidth: webMaxWidth } : null]}
+        numColumns={numColumns}
+        key={`restaurants-grid-${numColumns}`}
+        columnWrapperStyle={numColumns > 1 ? styles.restaurantColumn : undefined}
         ListHeaderComponent={
           <View>
             <FlatList
@@ -164,7 +170,10 @@ const styles = StyleSheet.create({
   title: { textAlign: "center", fontSize: 22, fontFamily: AppFonts.poppinsSemiBold, fontWeight: "800", paddingTop: 14, paddingBottom: 6 },
   chip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8 },
   chipText: { fontFamily: AppFonts.poppinsMediumItalic, fontSize: 13 },
-  card: { borderWidth: 1, borderRadius: 18, overflow: "hidden", marginBottom: 14 },
+  listContent: { padding: 14, paddingBottom: 140, gap: 14 },
+  webListContent: { width: "100%", alignSelf: "center" },
+  restaurantColumn: { gap: 14, alignItems: "stretch" },
+  card: { borderWidth: 1, borderRadius: 18, overflow: "hidden", marginBottom: 14, flex: 1 },
   image: { width: "100%", height: 175 },
   cardBody: { padding: 14 },
   cardTitle: { fontSize: 17, fontFamily: AppFonts.poppinsSemiBold, fontWeight: "800" },
